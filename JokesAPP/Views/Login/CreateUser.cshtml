@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "New User";
+}
+
+<script src="~/Scripts/User.js"></script>
+<div id="app">
+
+    <form class="was-validated" id="NewUser">
+        <div class="mb-3 mt-3">
+            <label for="uname" class="form-label">Email:</label>
+            <input type="email" v-model="newUser.Email" class="form-control" id="email" placeholder="Enter Email" name="uname" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback" v-show="isInvalid">Please fill out this field.</div>
+        </div>
+        <div class="mb-3">
+            <label for="pwd" class="form-label">New Password:</label>
+            <input type="password" v-model="newUser.Password" class="form-control" id="NewPassword" placeholder="Enter password" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback" v-show="isInvalid">Please fill out this field.</div>
+        </div>
+        <div class="mb-3">
+            <label for="pwd" class="form-label">Confirm Password:</label>
+            <input type="password" v-model="confirmPassword" class="form-control" id="ConfirmPassword" placeholder="Enter password" required>
+            <div class="valid-feedback">Valid.</div>
+            <div class="invalid-feedback" v-show="isInvalid">Please fill out this field.</div>
+        </div>
+        <p v-show="invalidPasswordMatch" class="text-danger"> Password doesnot match </p>
+        <div class="justify-content-center">
+            <button type="button" class="btn btn-success" v-on:click="createNewUser()">Register</button>
+        </div>
+    </form>
+    <div class="modal" tabindex="-1" id ="UserModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p v-show="alreadyExist"> User already exist</p>
+                    <p v-show="createNew"> User created Successfully</p>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

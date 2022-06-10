@@ -1,0 +1,158 @@
+﻿
+@{
+    ViewData["Title"] = "Jokes Dashboard";
+}
+
+<script src="~/Scripts/Jokes.js"></script>
+<div id="app">
+    <div class="container-fluid">
+        <div class="row" id="signOut">
+            <div class="col-md-2 offset-md-10">
+                <button type="button" class="btn btn-success" v-on:click="signOut()">Signout</button>
+            </div>
+
+        </div>
+        </br>
+        </br>
+        <div class="row">
+            <h1> Search</h1>
+        </div>
+        <div class="row">
+            <div class="col-8">
+                <label>Jokes Question</label>
+                <div class="input-group">
+                    <input type="text" class="form-control" v-model="searchFilter.jokesQuestion" placeholder="Search Jokes" aria-describedby="basic-addon1">
+                </div>
+            </div>
+            <div class="col-4">
+                <label>Posted date </label>
+                <select class="form-select" aria-label="Default select example" v-model="searchFilter.jokesPosted">
+                    <option selected>Open this select menu</option>
+                    <option value="1">Past 24 hr</option>
+                    <option value="2">Past 1 week</option>
+                    <option value="3"> Past 1 month </option>
+                </select>
+            </div>
+        </div>
+        </br>
+
+        </br>
+        <div class="row">
+            <div class="table-responsive-xl">
+                <table class="table" id="TableLogin">
+                    <thead>
+                        <tr>
+                            <th>Jokes Question</th>
+                            <th class="text-center">DateTime</th>
+                            <th>Created By</th>
+                            <th colspan="2"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="LoginTable" v-for="(jokeItem,index) in jokeItems">
+                            <td class="col-5">
+                                <input v-bind:id="'jokesQuestion'+index" class="form-control" v-model="jokeItem.jokesQuestion" type="text" ReadOnly>
+                            </td>
+                            <td class="col-2">
+                                <input v-bind:id="'jokesCreatedAt'+index" class="form-control" v-model="jokeItem.createdAt" type="datetime" ReadOnly>
+                            </td>
+                            <td class="col-2">
+                                <input class="form-control" v-model="users.email" type="datetime" ReadOnly>
+                            </td>
+                            <td v-if = "jokeItem.jokesID > 0 && isNotEdit ">
+                                <button class="btn btn-info btn-sm" v-on:click="openJokesModal(jokeItem.jokesID)">
+                                    <i class="fa fa-eye" aria-hidden="true"></i>
+                                    See the Answer
+                                </button>
+                            </td>
+                            <td v-else>
+                                <input v-bind:id="'jokesAnswer'+index" class="form-control" v-model="jokeItem.jokesAnswer" readonly type="datetime">
+                            </td>
+
+                            <td colspan="4">
+                                <button v-bind:id="'buttonEdit'+index " class="btn btn-primary btn-sm" v-on:click="editLogin(index)"> <i class="fas fa-edit"></i> {{buttonEdit}}</button>
+                                <button v-bind:id="'buttonSave'+index" class="btn btn-success btn-sm" hidden v-on:click="saveLogin(index)"><i class="fas fa-save"></i> Save</button>
+                                <button v-bind:id="'buttonDelete'+index" class="btn btn-danger btn-sm" v-on:click="deleteLogin(jokeItem.jokesID)"><i class="fas fa-trash-alt"></i>Delete</button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+                <div class="row">
+                    <div class="col-md-4">
+                        <button type="button" class="btn btn-success" v-on:click="createLogin()"><i class="fas fa-plus-square"></i>create</button>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="JokesModal" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Jokes</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <label>Jokes Question</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" v-model="jokeItem.jokesQuestion" aria-describedby="basic-addon1" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <label>Jokes Answer</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" v-model="jokeItem.jokesAnswer" aria-describedby="basic-addon1" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Created BY</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" v-model="users.email" aria-describedby="basic-addon1" readonly>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <label>Created At</label>
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" v-model="jokeItem.createdAt" aria-describedby="basic-addon1" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="NotificationModal" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">User</h5>
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <p v-show="jokeCreated"> Joke created successfully</p>
+                        <p v-show="jokeUpdated"> Joke Updated successfully</p>
+                        <p v-show="jokeDeleted"> Joke Deleted successfully</p>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
